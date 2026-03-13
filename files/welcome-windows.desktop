@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Setup git user
+Exec=/usr/local/bin/setup_git_window.sh
+Hidden=false
+NoDisplay=false
+Terminal=false
+X-GNOME-Autostart-enabled=true

@@ -1,0 +1,94 @@
+all:
+  children:
+    students_pc:
+      hosts:
+        debian-415-1:
+        debian-415-2:
+        debian-415-3:
+        debian-415-4:
+        debian-415-5:
+        debian-415-6:
+        debian-415-7:
+        debian-415-8:
+        debian-415-9:
+        debian-415-10:
+        debian-415-11:
+        debian-415-12:
+        debian-415-13:
+        debian-415-14:
+        debian-415-15:
+        debian-415-16:
+    master_pc:
+      hosts:
+        debian-415-master:
+          ansible_connection: local
+
+  vars:
+    ansible_user: master
+    student_user: b415
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+    base_packages_list:
+      - bash
+      - vim
+      - nano
+      - git
+      - nmap
+      - traceroute
+      - dnsutils
+      - curl
+      - httpie
+      - wget
+      - apt-transport-https
+      - ca-certificates
+      - zenity
+      - unzip
+      - tar
+      - python3
+      - python3-venv
+      - ansible
+      - debootstrap
+    
+    vscode_key_url: https://packages.microsoft.com/keys/microsoft.asc
+    vscode_repo: deb [arch=amd64,arm64,armhf] https://packages.microsoft.com/repos/code stable main
+
+    virtualisation_package_list: 
+      - qemu-system
+      - qemu-kvm
+      - libvirt-daemon-system
+      - libvirt-clients
+      - ruby-libvirt
+      - libvirt-dev
+      - ruby-dev
+      - bridge-utils
+      - virt-manager
+      - ssh-askpass-gnome
+      - ruby-fog-libvirt
+      - vagrant
+      - qemu-utils
+    
+    virtualisation_groups:
+      - kvm
+      - libvirt
+      - libvirt-qemu
+
+    docker_packages_list:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+      - docker-buildx-plugin
+    docker_key_url: https://download.docker.com/linux/debian/gpg
+    docker_repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+
+    packer_version: 1.9.5
+
+    welcome_enable: true
+    welcome_title: Настройка пользователя GIT
+    welcome_text: Введите ваши имя,фамилию и номер группы, например "v.surtsov-876"
+
+    blocked_urls:
+      - giga.chat
+      - chat.deepseek.com
+      - chatgpt.com
+      - alice.yandex.ru

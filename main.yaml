@@ -1,0 +1,151 @@
+---
+- name: Install base software
+  hosts: all
+  tasks:
+    - name: Install base software
+      apt:
+        pkg: "{{ base_packages_list }}"
+        state: present
+        update_cache: true
+      become: true
+
+- name: Install vscode
+  hosts: all
+  become: true
+  tasks:
+    - name: Add gpg key for VSCode
+      get_url:
+        url: "{{ vscode_key_url }}"
+        dest: /etc/apt/trusted.gpg.d/microsoft.asc
+    - name: Add VSCode REPO
+      apt_repository:
+        repo: "{{ vscode_repo }}"
+        state: present
+        filename: vscode
+    - name: Install VSCode app
+      apt:
+        name: code
+        state: present
+        update_cache: true
+
+- name: Install virtualisation tools
+  hosts: all
+  become: true
+  tasks:
+    - name: Install virtualisation packages
+      apt:
+        pkg: "{{ virtualisation_package_list }}"
+        state: present
+    - name: Add users in groups
+      user:
+        name: "{{ item }}"
+        groups: "{{ virtualisation_groups }}"
+        append: yes
+      loop:
+        - "{{ ansible_user }}"
+        - "{{ student_user }}"
+    - name: Startup libvirtd
+      systemd:
+        name: libvirtd
+        state: started
+        enabled: yes
+    - name: Install libvirt plugin for wagrantbox
+      apt:
+        pkg: vagrant-libvirt
+        state: present
+  
+- name: Install Docker
+  hosts: all
+  become: true
+  tasks:
+    - name: Add gpg key for Docker
+      get_url:
+        url: "{{ docker_key_url }}"
+        dest: /etc/apt/trusted.gpg.d/docker.asc
+    - name: Add repository for Docker
+      apt_repository:
+        repo: "{{ docker_repo }}"
+        state: present
+        filename: docker
+    - name: Install Docker packages
+      apt:
+        pkg: "{{ docker_packages_list }}"
+        state: present
+    - name: Add users in docker group
+      user:
+        name: "{{ item }}"
+        groups: docker
+        append: yes
+      loop:
+        - "{{ ansible_user }}"
+        - "{{ student_user }}"
+
+- name: Install Packer
+  hosts: all
+  become: true
+  tasks:
+    - name: Download binary packer
+      unarchive:
+        src: "https://mirror.yandex.ru/mirrors/releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: yes
+    - name: Set permissions for packer
+      file:
+        path: /usr/local/bin/packer
+        state: file
+        mode: 0755
+
+- name: Add welcome window
+  hosts: students_pc
+  become: true
+  tasks:
+    - name: Add welcome window for git settings
+      template:
+        src: setup_git_window.sh.j2
+        dest: /usr/local/bin/setup_git_window.sh
+        mode: 0755
+      when: welcome_enable
+    - name: Add dir
+      file:
+        path: "/home/{{ student_user }}/.config/autostart"
+        state: directory
+        owner: "{{ student_user }}"
+        group: "{{ student_user }}"
+        mode: 0755
+      when: welcome_enable
+    - name: Add config for view welcome window
+      copy:
+        src: files/welcome-windows.desktop
+        dest: "/home/{{ student_user }}/.config/autostart/welcome-windows.desktop"
+        mode: 0444
+        owner: "{{ student_user }}"
+        group: "{{ student_user }}"
+      when: welcome_enable
+
+- name: Block specific addresses
+  hosts: students_pc
+  become: true
+  tasks:
+    - name: Add host in hosts for block
+      lineinfile:
+        path: /etc/hosts
+        line: "10.0.0.1 {{ item }}"
+      loop: "{{ blocked_urls }}"
+
+- name: Disable install broswer extantions
+  hosts: students_pc
+  become: true
+  tasks:
+    - name: Create policy dir
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - /etc/firefox/policies
+        - /etc/firefox 
+    - name: Add polices file
+      copy:
+        src: files/policies.json
+        dest: /etc/firefox/policies/policies.json
+        mode: 0644

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+CREDS=$(zenity --entry --title="{{ welcome_title }}" --text="{{ welcome_text }}:")
+if [[ -z "$CREDS" ]]; then
+    rm ~/.gitconfig
+else
+    cat << EOF > ~/.gitconfig
+[user]
+    name = ${CREDS}
+    email = ${CREDS}@$(hostname)
+EOF
+fi

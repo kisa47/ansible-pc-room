@@ -1,0 +1,17 @@
+{
+    "policies": {
+        "ExtensionSettings": {
+            "*": {
+		        "blocked_install_message": "Custom error message",
+                "installation_mode": "blocked"
+	        }
+        },
+    "DisableAppUpdate": true,
+    "BlockAboutConfig": true,
+    "DisablePasswordSaving": true,
+    "ClearDataOnClose": [
+      "cookies",
+      "cache"
+    ]
+  }
+}
