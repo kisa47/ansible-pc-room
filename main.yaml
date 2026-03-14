@@ -149,3 +149,15 @@
         src: files/policies.json
         dest: /etc/firefox/policies/policies.json
         mode: 0644
+
+- name: Download images for VMs
+  hosts: all
+  become: true
+  tasks:
+    - name: Download disks
+      get_url:
+        url: "{{ item }}"
+        dest: /var/lib/libvirt/images/
+        mode: 0644
+      loop: "{{ donwload_disks }}"
+
