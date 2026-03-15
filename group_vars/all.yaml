@@ -41,6 +41,7 @@ virtualisation_package_list:
   - ruby-fog-libvirt
   - vagrant
   - qemu-utils
+  - libguestfs-tools
 
 virtualisation_groups:
   - kvm
@@ -70,6 +71,12 @@ blocked_urls:
 
 donwload_disks:
   - https://cloud.debian.org/images/cloud/trixie/latest/debian-13-nocloud-amd64.qcow2
-  - https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-13.3.0-amd64-DVD-1.iso
-  - http://mirror.slitaz.org/iso/4.0/flavors/slitaz-4.0-base.iso
-  - http://mirror.slitaz.org/iso/3.0/flavors/slitaz-3.0-xvesa.iso
+  - https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-13.4.0-amd64-DVD-1.iso
+  - http://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+  # - http://mirror.slitaz.org/iso/4.0/flavors/slitaz-4.0-base.iso
+  # - http://mirror.slitaz.org/iso/3.0/flavors/slitaz-3.0-xvesa.iso
+
+clone_repos:
+  - { repo: "https://github.com/kisa47/lab-hypervisors-1.git" , dir: "lab-hypervisors-1" }
+
+git_default_branch: master

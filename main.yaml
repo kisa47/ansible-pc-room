@@ -154,10 +154,48 @@
   hosts: all
   become: true
   tasks:
+    - name: Create images dir
+      file:
+        path: "/home/{{ student_user }}/images/"
+        state: directory
+        mode: 0755
+        owner: "{{ student_user }}"
+        group: "{{ student_user }}"
     - name: Download disks
       get_url:
         url: "{{ item }}"
-        dest: /var/lib/libvirt/images/
+        dest: "/home/{{ student_user }}/images/"
         mode: 0644
+        owner: "{{ student_user }}"
+        group: "{{ student_user }}"
       loop: "{{ donwload_disks }}"
 
+- name: Clone repository
+  hosts: all
+  become: true
+  tasks:
+      - name: clone repo
+        become: true
+        git:
+          repo: "{{ item.repo }}"
+          dest: "/home/{{ student_user }}/{{ item.dir }}"
+        loop: "{{ clone_repos }}" 
+      - name: set permissions for git repo
+        become: true
+        file:
+          path: "/home/{{ student_user }}/{{ item.dir }}"
+          state: directory
+          owner: "{{ student_user }}"
+          group: "{{ student_user }}"
+          recurse: true
+        loop: "{{ clone_repos }}"
+- name: Disable autoupgrade
+  hosts: all
+  become: true
+  tasks:
+    - name: Disable autoupgrade via gsettings
+      shell: "gsettings set org.gnome.software {{ item }} false"
+      loop:
+        - allow-updates
+        - download-updates
+        - download-updates-notify

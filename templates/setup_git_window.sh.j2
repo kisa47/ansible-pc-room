@@ -1,12 +1,14 @@
 #!/bin/bash
 
-CREDS=$(zenity --entry --title="{{ welcome_title }}" --text="{{ welcome_text }}:")
-if [[ -z "$CREDS" ]]; then
-    rm ~/.gitconfig
+OLD_USERNAME=$(git config --global user.name)
+
+git config --global init.defaultBranch "{{ git_default_branch }}"
+
+NEW_USERNAME=$(zenity --entry --title="{{ welcome_title }}" --text="{{ welcome_text }}:" --entry-text="${OLD_USERNAME}" || echo "${OLD_USERNAME}")
+if [[ -z "$NEW_USERNAME" ]]; then
+    git config --unset-all --global user.name
+    git config --unset-all --global user.email
 else
-    cat << EOF > ~/.gitconfig
-[user]
-    name = ${CREDS}
-    email = ${CREDS}@$(hostname)
-EOF
+    git config --global user.name "${NEW_USERNAME}"
+    git config --global user.email "${NEW_USERNAME}@$(hostname)"
 fi
