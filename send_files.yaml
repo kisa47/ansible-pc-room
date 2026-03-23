@@ -1,0 +1,17 @@
+---
+- name: Download disks
+  vars:
+      # send_files:
+      #   - { src: "", dest: ""}
+
+
+  hosts: students_pc
+  tasks:
+    - name: Upload file
+      copy:
+        dest: "{{ item.dest }}"
+        src: "{{ item.src }}"
+        owner: "{{ student_user }}"
+        group: "{{ student_user }}"
+      loop: "{{ send_files if send_files is defined else [] }}"
+      become: true
