@@ -1,0 +1,52 @@
+---
+- name: Получить лабораторные работы
+  vars:
+    # fetch_file:
+    #   - { src: "/home/{{ student_user }}/lab-vm-1", dest: "~/labs"}
+
+  hosts: students_pc
+  tasks:
+    - name: Создать базовую директорию на локальной машине
+      file:
+        path: "{{ item.dest }}/{{ inventory_hostname }}/{{ item.src | basename }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      loop: "{{ fetch_file }}"
+
+    - name: Упаковать директорию на удаленном хосте в архив
+      command: tar -czf /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz -C {{ item.src }} .
+      args:
+        creates: /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz
+      become: true
+      loop: "{{ fetch_file }}"
+
+    - name: Fetch files to NAS
+      fetch:
+        src: /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz
+        dest: "/tmp/"
+        flat: yes
+        validate_checksum: yes
+      with_items: "{{ fetch_file }}"
+
+    - name: Скачать и распаковать архив в нужную папку на локальной машине
+      unarchive:
+        src: /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz
+        dest: "{{ item.dest }}/{{ inventory_hostname }}/{{ item.src | basename }}"
+        remote_src: yes
+      delegate_to: localhost
+      loop: "{{ fetch_file }}"
+
+    - name: Удалить временный архив на удаленном хосте
+      file:
+        path: /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz
+        state: absent
+      become: true
+      with_items: "{{ fetch_file }}"
+
+    - name: Удалить временный архив на текущем хосте
+      file:
+        path: /tmp/dir_{{ inventory_hostname }}_{{ item.src | basename }}.tar.gz
+        state: absent
+      delegate_to: localhost
+      with_items: "{{ fetch_file }}"

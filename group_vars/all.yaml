@@ -83,3 +83,5 @@ clone_repos:
 git_default_branch: master
 
 send_files: []
+
+fetch_file: []
