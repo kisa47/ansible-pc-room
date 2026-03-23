@@ -179,7 +179,8 @@
         git:
           repo: "{{ item.repo }}"
           dest: "/home/{{ student_user }}/{{ item.dir }}"
-        loop: "{{ clone_repos }}" 
+        loop: "{{ clone_repos }}"
+        ignore_errors: yes
       - name: set permissions for git repo
         become: true
         file:
