@@ -49,7 +49,7 @@
         name: libvirtd
         state: started
         enabled: yes
-    - name: Install libvirt plugin for wagrantbox
+    - name: Install libvirt plugin for vagrantbox
       apt:
         pkg: vagrant-libvirt
         state: present
@@ -190,6 +190,7 @@
           group: "{{ student_user }}"
           recurse: true
         loop: "{{ clone_repos }}"
+
 - name: Disable autoupgrade
   hosts: all
   become: true
@@ -200,3 +201,21 @@
         - allow-updates
         - download-updates
         - download-updates-notify
+
+- name: Add bridge for VMs
+  hosts: students_pc
+  become: true
+  tasks:
+    - name: Add config
+      template:
+        src: br0.j2
+        dest: /etc/network/interfaces.d/br0
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart networking
+  handlers:
+    - name: Restart networking
+      ansible.builtin.systemd:
+        name: networking
+        state: restarted
