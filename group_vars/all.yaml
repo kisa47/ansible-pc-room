@@ -85,6 +85,7 @@ clone_repos:
   - { repo: "https://github.com/kisa47/lab-hypervisors-1.git" , dir: "lab-hypervisors-1" }
   - { repo: "https://github.com/kisa47/lab-vm-1.git" , dir: "lab-vm-1"}
   - { repo: "https://github.com/kisa47/lab-vnet-1.git", dir: "lab-vnet1"}
+  - { repo: "https://github.com/kisa47/lab-docker-1.git", dir: "lab-docker-1"}
 
 git_default_branch: master
 
