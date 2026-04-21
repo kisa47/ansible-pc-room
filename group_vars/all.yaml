@@ -76,8 +76,7 @@ donwload_disks:
   - http://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
   - https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/x86_64/alpine-virt-3.23.3-x86_64.iso
   - https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/cloud/nocloud_alpine-3.23.3-x86_64-bios-tiny-r0.qcow2
-  # - http://mirror.slitaz.org/iso/4.0/flavors/slitaz-4.0-base.iso
-  # - http://mirror.slitaz.org/iso/3.0/flavors/slitaz-3.0-xvesa.iso
+  - https://cloud.debian.org/images/cloud/trixie/latest/debian-13-generic-amd64.qcow2
 
 phys_interface: ens4
 
