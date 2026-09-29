@@ -90,6 +90,7 @@ clone_repos:
   - { repo: "https://github.com/kisa47/lab-iaac-1.git", dir: "lab-iaac-1"}
   - { repo: "https://github.com/kisa47/lab-fiber-1.git", dir: "lab-fiber-1"}
   - { repo: "https://github.com/kisa47/lab-fiber-2.git", dir: "lab-fiber-2"}
+  - {repo: "https://github.com/kisa47/lab-fiber-3.git", dir: "lab-fiber-3"}
 
 git_default_branch: master
 
