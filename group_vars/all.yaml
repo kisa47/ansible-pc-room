@@ -93,6 +93,7 @@ clone_repos:
   - { repo: "https://github.com/kisa47/lab-fiber-3.git", dir: "lab-fiber-3"}
   - { repo: "https://github.com/kisa47/lab-network-service-1.git", dir: "lab-network-service-1"}
   - { repo: "https://github.com/kisa47/lab-ldap-1.git", dir: "lab-ldap-1"}
+  - { repo: "https://github.com/kisa47/lab-nginx-1.git", dir: "lab-nginx-1"}
 
 git_default_branch: master
 
